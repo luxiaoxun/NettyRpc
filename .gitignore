@@ -31,3 +31,6 @@ logs/
 out/
 target/
 .idea/
+.classpath
+.project
+.settings
