@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-        <jackson.version>2.9.6</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <spring.version>4.3.20.RELEASE</spring.version>
     </properties>
 
