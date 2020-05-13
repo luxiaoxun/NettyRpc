@@ -7,15 +7,15 @@
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.nettyrpc.test.server"/>
+    <context:component-scan base-package="com.netty.rpc.test.server"/>
 
     <context:property-placeholder location="classpath:rpc.properties"/>
 
-    <bean id="serviceRegistry" class="com.nettyrpc.registry.ServiceRegistry">
+    <bean id="serviceRegistry" class="com.netty.rpc.registry.ServiceRegistry">
         <constructor-arg name="registryAddress" value="${registry.address}"/>
     </bean>
 
-    <bean id="rpcServer" class="com.nettyrpc.server.RpcServer">
+    <bean id="rpcServer" class="com.netty.rpc.server.RpcServer">
         <constructor-arg name="serverAddress" value="${server.address}"/>
         <constructor-arg name="serviceRegistry" ref="serviceRegistry"/>
     </bean>

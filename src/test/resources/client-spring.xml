@@ -9,11 +9,11 @@
 
     <context:property-placeholder location="classpath:rpc.properties"/>
 
-    <bean id="serviceDiscovery" class="com.nettyrpc.registry.ServiceDiscovery">
+    <bean id="serviceDiscovery" class="com.netty.rpc.registry.ServiceDiscovery">
         <constructor-arg name="registryAddress" value="${registry.address}"/>
     </bean>
 
-    <bean id="rpcClient" class="com.nettyrpc.client.RpcClient">
+    <bean id="rpcClient" class="com.netty.rpc.client.RpcClient">
         <constructor-arg name="serviceDiscovery" ref="serviceDiscovery"/>
     </bean>
 
