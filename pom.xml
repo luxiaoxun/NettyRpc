@@ -20,7 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <spring.version>5.2.6.RELEASE</spring.version>
-        <jackson.version>2.10.1</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
         <curator.version>2.13.0</curator.version>
         <guava.version>29.0-jre</guava.version>
     </properties>
