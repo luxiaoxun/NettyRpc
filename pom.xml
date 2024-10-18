@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-        <spring.version>5.2.22.RELEASE</spring.version>
+        <spring.version>6.1.14</spring.version>
         <jackson.version>2.14.0</jackson.version>
         <curator.version>2.13.0</curator.version>
         <guava.version>32.0.0-jre</guava.version>
