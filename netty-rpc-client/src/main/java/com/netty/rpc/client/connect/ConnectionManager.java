@@ -170,6 +170,8 @@ public class ConnectionManager {
                 size = connectedServerNodes.values().size();
             } catch (InterruptedException e) {
                 logger.error("Waiting for available service is interrupted!", e);
+                Thread.currentThread().interrupt();
+                throw new Exception("Interrupted while waiting for available service", e);
             }
         }
         RpcProtocol rpcProtocol = loadBalance.route(serviceKey, connectedServerNodes);
@@ -202,7 +204,22 @@ public class ConnectionManager {
             removeAndCloseHandler(rpcProtocol);
         }
         signalAvailableHandler();
+
+        // Gracefully shutdown thread pool
         threadPoolExecutor.shutdown();
+        try {
+            if (!threadPoolExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                logger.warn("ThreadPoolExecutor did not terminate in time, forcing shutdown");
+                threadPoolExecutor.shutdownNow();
+                if (!threadPoolExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+                    logger.error("ThreadPoolExecutor did not terminate");
+                }
+            }
+        } catch (InterruptedException e) {
+            threadPoolExecutor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
         eventLoopGroup.shutdownGracefully();
     }
 }
