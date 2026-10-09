@@ -67,9 +67,12 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResponse> {
             ChannelFuture channelFuture = channel.writeAndFlush(request).sync();
             if (!channelFuture.isSuccess()) {
                 logger.error("Send request {} error", request.getRequestId());
+                pendingRPC.remove(request.getRequestId());
             }
         } catch (InterruptedException e) {
             logger.error("Send request exception: " + e.getMessage());
+            pendingRPC.remove(request.getRequestId());
+            Thread.currentThread().interrupt();
         }
 
         return rpcFuture;

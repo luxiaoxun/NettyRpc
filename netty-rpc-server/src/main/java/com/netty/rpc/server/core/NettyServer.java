@@ -23,6 +23,8 @@ public class NettyServer extends Server {
     private String serverAddress;
     private ServiceRegistry serviceRegistry;
     private Map<String, Object> serviceMap = new HashMap<>();
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
 
     public NettyServer(String serverAddress, String registryAddress) {
         this.serverAddress = serverAddress;
@@ -42,8 +44,8 @@ public class NettyServer extends Server {
 
             @Override
             public void run() {
-                EventLoopGroup bossGroup = new NioEventLoopGroup();
-                EventLoopGroup workerGroup = new NioEventLoopGroup();
+                bossGroup = new NioEventLoopGroup();
+                workerGroup = new NioEventLoopGroup();
                 try {
                     ServerBootstrap bootstrap = new ServerBootstrap();
                     bootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
@@ -72,6 +74,7 @@ public class NettyServer extends Server {
                         serviceRegistry.unregisterService();
                         workerGroup.shutdownGracefully();
                         bossGroup.shutdownGracefully();
+                        threadPoolExecutor.shutdown();
                     } catch (Exception ex) {
                         logger.error(ex.getMessage(), ex);
                     }
@@ -82,9 +85,25 @@ public class NettyServer extends Server {
     }
 
     public void stop() {
-        // destroy server thread
+        // Shutdown EventLoopGroups first to trigger channel closure
+        if (workerGroup != null) {
+            workerGroup.shutdownGracefully();
+        }
+        if (bossGroup != null) {
+            bossGroup.shutdownGracefully();
+        }
+
+        // Wait for server thread to terminate
         if (thread != null && thread.isAlive()) {
-            thread.interrupt();
+            try {
+                thread.join(5000); // Wait up to 5 seconds
+                if (thread.isAlive()) {
+                    logger.warn("Server thread did not terminate in time");
+                    thread.interrupt();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
